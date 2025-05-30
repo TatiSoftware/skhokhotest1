@@ -59,6 +59,11 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
+      - name: Debug ECR Secrets
+        run: |
+          echo "ECR_REGISTRY=${{ secrets.ECR_REGISTRY }}"
+          echo "ECR_REPOSITORY=${{ secrets.ECR_REPOSITORY }}"
+
       - name: Build and push Docker image to ECR
         env:
           ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
@@ -71,7 +76,7 @@ jobs:
           fi
 
           IMAGE_URI=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "Building image: $IMAGE_URI"
+          echo "🚀 Building image: $IMAGE_URI"
 
           docker build -t $IMAGE_URI .
           docker push $IMAGE_URI
