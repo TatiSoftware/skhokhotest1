@@ -1,0 +1,36 @@
+{
+  "version": "41.0.0",
+  "files": {
+    "a1a4656c0465d25b51ba91f18a1159f17bc08369692d022e742e92aa4ad13536": {
+      "displayName": "DjangoStack Template",
+      "source": {
+        "path": "DjangoStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "363505095243-eu-west-1": {
+          "bucketName": "cdk-hnb659fds-assets-363505095243-eu-west-1",
+          "objectKey": "a1a4656c0465d25b51ba91f18a1159f17bc08369692d022e742e92aa4ad13536.json",
+          "region": "eu-west-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::363505095243:role/cdk-hnb659fds-file-publishing-role-363505095243-eu-west-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {
+    "7e637aca8129840756c15e41bfe30f9b2af3f22fea9898278aba507403864469": {
+      "displayName": "DjangoFargateService/TaskDef/web/AssetImage",
+      "source": {
+        "directory": "asset.7e637aca8129840756c15e41bfe30f9b2af3f22fea9898278aba507403864469"
+      },
+      "destinations": {
+        "363505095243-eu-west-1": {
+          "repositoryName": "cdk-hnb659fds-container-assets-363505095243-eu-west-1",
+          "imageTag": "7e637aca8129840756c15e41bfe30f9b2af3f22fea9898278aba507403864469",
+          "region": "eu-west-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::363505095243:role/cdk-hnb659fds-image-publishing-role-363505095243-eu-west-1"
+        }
+      }
+    }
+  }
+}
