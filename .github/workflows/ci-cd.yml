@@ -77,10 +77,10 @@ jobs:
           secret-ids: AWS-SECRETS
           parse-json-secrets: true
 
-      - name: Debug Secret Output
+      - name: Debug loaded secrets
         run: |
-          echo "ECR_REGISTRY: $ECR_REGISTRY"
-          echo "ECR_REPOSITORY: $ECR_REPOSITORY"
+          echo "ECR_REGISTRY=$ECR_REGISTRY"
+          echo "ECR_REPOSITORY=$ECR_REPOSITORY"
         env:
           ECR_REGISTRY: ${{ steps.secrets.outputs.ECR_REGISTRY }}
           ECR_REPOSITORY: ${{ steps.secrets.outputs.ECR_REPOSITORY }}
@@ -94,6 +94,10 @@ jobs:
           ECR_REPOSITORY: ${{ steps.secrets.outputs.ECR_REPOSITORY }}
           IMAGE_TAG: latest
         run: |
+          if [ -z "$ECR_REGISTRY" ] || [ -z "$ECR_REPOSITORY" ]; then
+            echo "❌ Missing ECR_REGISTRY or ECR_REPOSITORY"
+            exit 1
+          fi
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
 
