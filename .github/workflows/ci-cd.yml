@@ -79,27 +79,31 @@ jobs:
 
       - name: Debug loaded secrets
         run: |
-          echo "ECR_REGISTRY=$ECR_REGISTRY"
-          echo "ECR_REPOSITORY=$ECR_REPOSITORY"
+          echo "DEBUG: ECR_REGISTRY = $ECR_REGISTRY"
+          echo "DEBUG: ECR_REPOSITORY = $ECR_REPOSITORY"
         env:
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          ECR_REGISTRY: ${{ steps.secrets.outputs.ECR_REGISTRY }}
+          ECR_REPOSITORY: ${{ steps.secrets.outputs.ECR_REPOSITORY }}
 
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
       - name: Build and push Docker image to ECR
         env:
-          ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
-          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          ECR_REGISTRY: ${{ steps.secrets.outputs.ECR_REGISTRY }}
+          ECR_REPOSITORY: ${{ steps.secrets.outputs.ECR_REPOSITORY }}
           IMAGE_TAG: latest
         run: |
           if [ -z "$ECR_REGISTRY" ] || [ -z "$ECR_REPOSITORY" ]; then
-            echo "❌ Missing ECR_REGISTRY or ECR_REPOSITORY"
+            echo "❌ ERROR: Missing ECR_REGISTRY or ECR_REPOSITORY"
             exit 1
           fi
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+          IMAGE_URI=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "Building image: $IMAGE_URI"
+
+          docker build -t $IMAGE_URI .
+          docker push $IMAGE_URI
 
       - name: Deploy to ECS Fargate
         run: |
